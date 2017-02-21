@@ -68,6 +68,32 @@ app.delete('/todos/:id', (req, res) => {
   });
 });
 
+// we use patch for updating
+app.patch('/todos/:id', (req, res) => {
+  let id = req.params.id;
+  // body var includes a subset of the things the user passed to us
+  // text and completed are the only properties the user should be able to update
+  let body = _.pick(req.body, ['text', 'completed']);
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+  if(_.isBoolean(body.completed) && body.completed) {
+    //getTime returns JS timestamp - number od milliseconds since midnight
+    body.completedAt = new Date().getTime()
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+  // $set - sets a key value pair // new ist similar to return original
+  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+    if(!todo) {
+      return res.status(404).send();
+    }
+    res.send({todo})
+  }).catch((e) => {
+    res.status(400).send();
+  });
+})
 app.listen(port, () => {
   console.log(`Started up at port ${port}`);
 });
