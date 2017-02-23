@@ -81,7 +81,7 @@ app.patch('/todos/:id', (req, res) => {
   }
   if(_.isBoolean(body.completed) && body.completed) {
     //getTime returns JS timestamp - number od milliseconds since midnight
-    body.completedAt = new Date().getTime()
+    body.completedAt = new Date().getTime();
   } else {
     body.completed = false;
     body.completedAt = null;
@@ -91,12 +91,28 @@ app.patch('/todos/:id', (req, res) => {
     if(!todo) {
       return res.status(404).send();
     }
-    res.send({todo})
+    res.send({todo});
   }).catch((e) => {
     res.status(400).send();
   });
-})
-app.listen(port, () => {
+});
+
+app.post('/users', (req, res) => {
+   let body = _.pick(req.body, ['email', 'password']);
+   console.log(body);
+   let user = new User(body);
+   
+   user.save().then(() => {
+     return user.generateAuthToken();
+      // res.send(user);
+   }).then((token) => {
+     //x- is for custom headers
+     res.header('x-auth', token).send(user);
+   }).catch((e) => {
+    res.status(400).send(e);
+   });
+});
+app.listen(port, () => {  
   console.log(`Started up at port ${port}`);
 });
 
