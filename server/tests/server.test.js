@@ -1,7 +1,7 @@
 const expect = require('expect');
 const request = require('supertest');
 const {ObjectID} = require('mongodb');
-
+const {User} = require('../models/user');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 const { todos, populateTodos, users, populateUsers } = require('./seed/seed');
@@ -197,6 +197,7 @@ describe('GET / users / me', () => {
   });
 });
 describe('POST / users', () => {
+
   it('should create a user', (done) => {
     let email = 'example@example.com';
     let password = '123mnb';
@@ -212,14 +213,45 @@ describe('POST / users', () => {
         expect(res.body._id).toExist();
         expect(res.body.email).toBe(email);
       })
-      .end(done);
+      // instead of done we are passing in one of our custom functions - this way we can check the database.
+      .end((err) => {
+        if(err) {
+          return done(err);
+        }
+
+        User.findOne({email}).then((user) => {
+          expect(user).toExist();
+          // since our passwords are getting hashed we can expect the in the database stored password 
+          // is not to equal the password variable, we've used above.
+          expect(user.password).toNotBe(password);
+          done();
+        });
+      });
   });
 
   it('should return validation errors if request is invalid', (done) => {
+     let email = 'exampleexample.com';
+     let password = '123mn';
 
+     request (app)
+      .post('/users')
+      .send({email, password})
+      .expect(400)
+      .end(done);
   });
 
   it('should not create user if email is in use', (done) => {
-
-  });
-})
+    let email = users[0].email;
+    request (app)
+      .post('/users')
+      .send({email})
+      .expect(400)
+      .expect((res) => {
+        User.findOne({email}).then((email) => {
+        expect(email).NotToExist();
+        });
+      })
+      .end(done);
+      
+  }); 
+});

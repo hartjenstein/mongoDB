@@ -77,6 +77,11 @@ UserSchema.statics.findByToken = function (token) {
     'tokens.access': 'auth'
   });
 };
+// .statics is a model method
+// using a regular function because we need the binding of the this keyword
+UserSchema.statics.findByCredentials = function (email, password) {
+
+};
 UserSchema.pre('save', function (next) {
     var user = this;
 

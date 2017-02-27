@@ -40,7 +40,7 @@ const populateUsers = (done) => {
       let userTwo = new User(users[1]).save();
     // Promise.all takes an array of promises 
     // and doesnt fire the call back until all promises are resolved!
-      Promise.all([userOne, userTwo])
+      Promise.all([userOne, userTwo]);
       }).then(() => done()); 
 };
 module.exports = { todos, populateTodos, users, populateUsers };

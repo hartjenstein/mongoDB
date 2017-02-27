@@ -118,6 +118,19 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 
+app.post('/users/login', (req, res) => {
+  let body = _.pick(req.body, ['email', 'password']);
+  res.send(body);
+  // send email and password to findByCredentials() and get the matching user back
+  User.findByCredentials(body.email, body,password).then((user) => {
+  
+  }).catch((e) => {
+
+  });
+});
+
+
+
 app.listen(port, () => {  
   console.log(`Started up at port ${port}`);
 });

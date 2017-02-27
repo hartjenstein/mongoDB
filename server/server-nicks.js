@@ -1,18 +1,18 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var {ObjectID} = require('mongodb');
+let express = require('express');
+let bodyParser = require('body-parser');
+let {ObjectID} = require('mongodb');
+let {User} = require('./users')
+let {mongoose} = require('./db/mongoose');
+let {Todo} = require('./models/todo');
+let {User} = require('./models/user');
 
-var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
-
-var app = express();
+let app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
-  var todo = new Todo({
+  let todo = new Todo({
     text: req.body.text
   });
 
@@ -32,7 +32,7 @@ app.get('/todos', (req, res) => {
 });
 
 app.get('/todos/:id', (req, res) => {
-  var id = req.params.id;
+  let id = req.params.id;
 
   if (!ObjectID.isValid(id)) {
     return res.status(404).send();
@@ -50,7 +50,7 @@ app.get('/todos/:id', (req, res) => {
 });
 app.delete('/todos/:id', (req, res) => {
   //get id
-  var id = req.params.id;
+  let id = req.params.id;
   //validate id -> not valid - 404
    if (!ObjectID.isValid(id)) {
     return res.status(404).send();
