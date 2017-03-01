@@ -13,6 +13,11 @@
      completedAt: {
         type: Number,
         default: null 
+     },
+     // using the underscore to make clear that its an object id
+     _creator: {
+         type: mongoose.Schema.Types.ObjectId,
+         required: true
      }
  });
  module.exports = { Todo };
