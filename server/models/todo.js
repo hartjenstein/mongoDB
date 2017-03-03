@@ -14,12 +14,13 @@
         type: Number,
         default: null 
      },
-     // using the underscore to make clear that its an object id
-     _creator: {
-         type: mongoose.Schema.Types.ObjectId,
-         required: true
-     }
+     
+    _creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  }
  });
+ // _creator: using the underscore to make clear that its an object id
  module.exports = { Todo };
 
  // beispiel

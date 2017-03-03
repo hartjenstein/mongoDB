@@ -16,7 +16,7 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 
 app.post('/todos', authenticate, (req, res) => {
-  const todo = new Todo({
+  var todo = new Todo({
     text: req.body.text,
     _creator: req.user._id
   });
